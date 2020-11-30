@@ -19,7 +19,8 @@ public class connectingUser {
  
             new ReadThread(socket, this).start();
             new WriteThread(socket, this).start();
-            Encryption ENC = new Encryption(hostname, port);
+            
+            //Encryption ENC = new Encryption(hostname, port);
             
  
         } catch (UnknownHostException ex) {

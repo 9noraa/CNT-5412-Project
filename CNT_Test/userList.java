@@ -2,14 +2,27 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.crypto.spec.SecretKeySpec;
+
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+
 public class userList extends Thread {
     private Socket socket;
     private mainUser hostUser;
     private PrintWriter writer;
+    Encryption ENC;
+    SecretKeySpec SharedKey;
  
     public userList(Socket socket, mainUser hostUser) {
         this.socket = socket;
         this.hostUser = hostUser;
+        ENC = new Encryption(); 
+        try {
+			SharedKey = ENC.KeyExchange();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
  
     public void run() {
@@ -31,11 +44,14 @@ public class userList extends Thread {
             String clientMessage;
  
             do {
+            	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
+            	LocalDateTime now = LocalDateTime.now();
+            	
                 clientMessage = reader.readLine();
-                serverMessage = "[" + userName + "]: " + clientMessage;
+                serverMessage = dtf.format(now) + " [" + userName + "]: " + clientMessage;
                 hostUser.broadcast(serverMessage, this);
  
-            } while (!clientMessage.equals("bye"));
+            } while (!clientMessage.equals("exit"));
  
             hostUser.removeUser(userName, this);
             socket.close();

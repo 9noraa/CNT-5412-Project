@@ -26,6 +26,7 @@ public class mainUser {
  
             while (true) {
                 Socket socket = serverSocket.accept();
+                user_count++;
                 System.out.println("New user connected");
  
                 userList newUser = new userList(socket, this);
