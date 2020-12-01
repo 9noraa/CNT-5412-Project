@@ -85,13 +85,6 @@ public class Encryption {
             byte[] User2SharedSecret = new byte[User1Len];
             int User2Len;
             User2Len = User2KeyAgree.generateSecret(User2SharedSecret, 0);
-            System.out.println("User1 Key: " +
-                    toHexString(User1SharedSecret));
-            System.out.println("User2 Key: " +
-                    toHexString(User2SharedSecret));
-            if (!java.util.Arrays.equals(User1SharedSecret, User2SharedSecret))
-                throw new Exception("Shared secrets differ");
-            System.out.println("Shared secrets are the same");
             
             
             SecretKeySpec User2AesKey = new SecretKeySpec(User2SharedSecret, 0, 16, "AES");
@@ -127,7 +120,7 @@ public class Encryption {
         return buf.toString();
 	}
 	
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Encryption enc = new Encryption();
          
         try {
@@ -135,7 +128,7 @@ public class Encryption {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+    }*/
 	
 
 }
