@@ -6,6 +6,7 @@ public class connectingUser {
     private int port;
     private String userName;
  
+    //Consructor
     public connectingUser(String hostname, int port) {
         this.hostname = hostname;
         this.port = port;
@@ -17,6 +18,7 @@ public class connectingUser {
  
             System.out.println("Connected to the chat host");
  
+            //Run thread programs
             new ReadThread(socket, this).start();
             new WriteThread(socket, this).start();
             
@@ -40,9 +42,11 @@ public class connectingUser {
     }
  
  
+    //Parse command line
     public static void main(String[] args) {
         if (args.length < 2) return;
  
+        //Get hostname and port number
         String hostname = args[0];
         int port = Integer.parseInt(args[1]);
  

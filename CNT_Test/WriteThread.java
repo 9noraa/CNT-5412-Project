@@ -23,6 +23,7 @@ public class WriteThread extends Thread {
  
         Console console = System.console();
  
+        //Write to socket output stream
         String userName = console.readLine("\nEnter your name: ");
         user.setUserName(userName);
         writer.println(userName);

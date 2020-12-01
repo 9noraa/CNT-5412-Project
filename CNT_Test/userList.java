@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -25,10 +26,12 @@ public class userList extends Thread {
     private String encMessage;
     private String decMessage;
     
+    //JFrame fields
     private static JFrame f;
     private static JTextArea jt;
     private JPanel p;
  
+    //Constructor to open JFrame
     public userList(Socket socket, mainUser hostUser) {
     	f = new JFrame("Chat");
     	jt = new JTextArea(30, 30); 
@@ -40,9 +43,12 @@ public class userList extends Thread {
         f.setSize(500, 500); 
         f.show();
     	
+        //Connect to host
         this.socket = socket;
         this.hostUser = hostUser;
         ENC = new Encryption(); 
+        
+        //Key sharing
         try {
 			SharedKey = ENC.KeyExchange();
 		} catch (Exception e) {
@@ -56,22 +62,26 @@ public class userList extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
  
             OutputStream output = socket.getOutputStream();
+            
             writer = new PrintWriter(output, true);
- 
             printUsers();
  
             String userName = reader.readLine();
             hostUser.addUserName(userName);
  
+            //New user connected
             String serverMessage = "New user connected: " + userName;
             hostUser.broadcast(serverMessage, this);
  
             String clientMessage;
  
+            //do while that runs while the client is running
             do {
+            	//Date for message
             	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd HH:mm:ss");
             	LocalDateTime now = LocalDateTime.now();
             	
+            	//Read client message and encrypt
                 clientMessage = reader.readLine();
                 try {
 					encMessage = ENC.encrypt(SharedKey, clientMessage);
@@ -86,6 +96,11 @@ public class userList extends Thread {
 				} catch (BadPaddingException e) {
 					e.printStackTrace();
 				}
+                
+                sendtoConsole(encMessage);
+                //sendtoConsole(decMessage);
+                
+                //Write date and message to chat
                 serverMessage = dtf.format(now) + " [" + userName + "]: " + clientMessage;
                 hostUser.broadcast(serverMessage, this);
  
@@ -103,9 +118,7 @@ public class userList extends Thread {
         }
     }
  
-    /**
-     * Sends a list of online users to the newly connected user.
-     */
+    
     void printUsers() {
         if (hostUser.hasUsers()) {
             writer.println("You are connected to user: " + hostUser.getUserNames());
@@ -114,11 +127,13 @@ public class userList extends Thread {
         }
     }
  
-    /**
-     * Sends a message to the client.
-     */
+    //Write to the JFrame text area
     void sendMessage(String message) {
-        //writer.println(message);
     	jt.append(message + "\n");
+    }
+    
+    //Write to console
+    void sendtoConsole(String message) {
+    	writer.println("encrypted message:" + message);
     }
 }

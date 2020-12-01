@@ -10,12 +10,14 @@ public class mainUser {
     private Set<String> userNames = new HashSet<>();
     private Set<userList> userThreads = new HashSet<>();
  
+    //Constructor
     public mainUser(int port) {
         this.port = port;
         this.hostname = "localhost";
         user_count = 0;
     }
  
+    //Run creates socket to accept users
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             addUser();
@@ -25,6 +27,7 @@ public class mainUser {
             //System.out.println("Waiting for user to connect to port: " + port);
  
             while (true) {
+            	//Accept new users
                 Socket socket = serverSocket.accept();
                 user_count++;
                 System.out.println("New user connected");
@@ -60,9 +63,7 @@ public class mainUser {
         //hostUser.addUser();
     }
  
-    /**
-     * Delivers a message from one user to others (broadcasting)
-     */
+    //Write to JTextArea
     void broadcast(String message, userList excludeUser) {
         for (userList aUser : userThreads) {
             if (aUser != excludeUser) {
@@ -71,16 +72,12 @@ public class mainUser {
         }
     }
  
-    /**
-     * Stores username of the newly connected client.
-     */
+    //Add newly connected user
     void addUserName(String userName) {
         userNames.add(userName);
     }
  
-    /**
-     * When a client is disconneted, removes the associated username and UserThread
-     */
+    //Remove user from list
     void removeUser(String userName, userList aUser) {
         boolean removed = userNames.remove(userName);
         if (removed) {
@@ -93,17 +90,17 @@ public class mainUser {
         return this.userNames;
     }
  
-    /**
-     * Returns true if there are other users connected (not count the currently connected user)
-     */
+    
     public boolean hasUsers() {
         return !this.userNames.isEmpty();
     }
     
+    //Get the number of users on server (max should be 2)
     public int getUserCount() {
     	return user_count;
     }
     
+    //Add a new user 
     public void addUser() {
     	connectingUser host = new connectingUser(hostname, port);
     	host.run();

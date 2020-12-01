@@ -9,7 +9,7 @@ import java.security.interfaces.*;
 import javax.crypto.spec.*;
 import javax.crypto.interfaces.*;
 
-
+//Encryption class to negotiate key and encrypt
 public class Encryption {
 	private SecretKeySpec SharedKey;
 	private byte[] encParams;
@@ -18,6 +18,7 @@ public class Encryption {
         
     }
 	
+	//AES CBC encryption
 	public String encrypt(SecretKeySpec SharedKey, String message) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
 		byte[] plaintext = message.getBytes();
 		Cipher enc = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -27,6 +28,7 @@ public class Encryption {
 		return ciphertext.toString();
 	}
 	
+	//AES CBC decryption
 	public String decrypt(SecretKeySpec SharedKey, String ciphertext) throws NoSuchAlgorithmException, IOException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		AlgorithmParameters aesParams = AlgorithmParameters.getInstance("AES");
 		aesParams.init(encParams);
@@ -36,9 +38,10 @@ public class Encryption {
 		return plaintext.toString();
 	}
 	
+	//Key exchange
 	public SecretKeySpec KeyExchange() throws Exception {
         KeyPairGenerator User1pairGen = KeyPairGenerator.getInstance("DH");
-        User1pairGen.initialize(2048);
+        User1pairGen.initialize(512);
         KeyPair User1Kpair = User1pairGen.generateKeyPair();
         
         // User 1 creates key agreement object

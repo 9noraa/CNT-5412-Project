@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 
+//Read from socket stream
 public class ReadThread extends Thread {
     private BufferedReader reader;
     private Socket socket;
