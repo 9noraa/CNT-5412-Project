@@ -17,4 +17,5 @@ Connect the second user to that same port number - "java connectingUser localhos
 Members:
 
 Aaron - peer to peer code, JFrame GUI, Diffie Hellman, last two pages of report
+Jacob - 
 
